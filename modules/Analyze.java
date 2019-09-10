@@ -32,9 +32,9 @@ class Analyze implements Runnable {
         };
 
         //只接收A类请求和0100的情况
-        if (Integer.toHexString(dnsDatagram.getRequest().getqType()[1]).equals("1") &&
-                flags[0].equals("1") &&
-                flags[1].equals("0")) {
+        if ((Integer.toHexString(dnsDatagram.getRequest().getqType()[1]).equals("1")||Integer.toHexString(dnsDatagram.getRequest().getqType()[1]).equals("1c")) &&
+                (flags[0].equals("1") &&
+                flags[1].equals("0"))) {
             //如果匹配DNSFile则发送给本地
             if (DNSFile.search(dnsDatagram.getRequest().extractName()) != null) {
                 Forward f = new Forward(new ForwardToLocal());

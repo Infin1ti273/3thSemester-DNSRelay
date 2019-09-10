@@ -22,6 +22,7 @@ public class Listen {
         localSocket = new DatagramSocket(53, InetAddress.getByName("127.0.0.1"));
         DatagramPacket receivePacket = new DatagramPacket(new byte[1024], 1024);
 
+        System.out.println("Initiating Listening module......");
         ExecutorService servicePool = Executors.newFixedThreadPool(10);
 
         while (true) {

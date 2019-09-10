@@ -31,7 +31,7 @@ class ForwardToInternet implements IForwardType {
             internetSocket.close();
 
             DatagramPacket responsePacket = new DatagramPacket(internetReceivedPacket.getData(), internetReceivedPacket.getLength());
-            responsePacket.setAddress(datagramPacket.getAddress());
+            responsePacket.setAddress(InetAddress.getByName("127.0.0.1"));
             responsePacket.setPort(datagramPacket.getPort());
             synchronized (Listen.Lock) {
                 try {

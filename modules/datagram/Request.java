@@ -33,7 +33,7 @@ public class Request extends DatagramBuilder {
                 nameReturn.append(".");
             }
             //转换指定数量的数
-            for (int j = Integer.parseInt(name.get(i)); j > 0; j--,i++) {
+            for (int j = Integer.parseInt(name.get(i),16); j > 0; j--,i++) {
                 nameReturn.append((char) Integer.parseInt(name.get(i + 1), 16));
             }
         }
