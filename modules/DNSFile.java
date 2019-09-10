@@ -11,6 +11,7 @@ public class DNSFile {
     private static Hashtable<String, String> table;
 
     public DNSFile() throws IOException {
+        System.out.println("Loading DNS files...");
         File file = new File(FILE_DIRECTION);
         Hashtable<String, String> result = new Hashtable<>();
         String line;
@@ -29,7 +30,7 @@ public class DNSFile {
         }
     }
 
-    public static boolean isTableNull() {
+    public static boolean isTableNotExist() {
         return table == null;
     }
 

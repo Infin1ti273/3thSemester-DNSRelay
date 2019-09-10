@@ -30,7 +30,7 @@ public class Response extends DatagramBuilder {
     void output() {
         Vector<String> vector = new Vector<>();
         for (byte b: build()) {
-            vector.add(Integer.toHexString(b));
+            vector.add(Integer.toHexString(b  & 0xFF));
         }
         System.out.println("#Response");
         for (String s: vector) {

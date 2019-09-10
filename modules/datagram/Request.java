@@ -62,14 +62,14 @@ public class Request extends DatagramBuilder {
 
         System.out.println("#Request:");
         for (byte b: this.qName) {
-            name.add(Integer.toHexString(b));
+            name.add(Integer.toHexString(b  & 0xFF));
         }
         //输出域名
         for (String s: name) {
             System.out.print(s + " ");
         }
         System.out.println("0");
-        System.out.println(extractName());
+        System.out.println("实际域名: " + extractName());
 
         //输出剩余信息（type和class）
         System.out.println("Type: " + Integer.toHexString(qType[0]) + " " + Integer.toHexString(qType[1]));

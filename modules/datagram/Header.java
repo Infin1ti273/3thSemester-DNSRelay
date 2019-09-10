@@ -42,22 +42,22 @@ public class Header extends DatagramBuilder {
     void output() {
         Vector<String> header = new Vector<>();
         for (byte b : this.transID) {
-            header.add(Integer.toHexString(b));
+            header.add(Integer.toHexString(b & 0xFF));
         }
         for (byte b : this.flags) {
-            header.add(Integer.toHexString(b));
+            header.add(Integer.toHexString(b & 0xFF));
         }
         for (byte b : this.qdCount) {
-            header.add(Integer.toHexString(b));
+            header.add(Integer.toHexString(b & 0xFF));
         }
         for (byte b : this.anCount) {
-            header.add(Integer.toHexString(b));
+            header.add(Integer.toHexString(b & 0xFF));
         }
         for (byte b : this.nsCount) {
-            header.add(Integer.toHexString(b));
+            header.add(Integer.toHexString(b & 0xFF));
         }
         for (byte b : this.arCount) {
-            header.add(Integer.toHexString(b));
+            header.add(Integer.toHexString(b & 0xFF));
         }
         System.out.println(
                         "#Header \n" +

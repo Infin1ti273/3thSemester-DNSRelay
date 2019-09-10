@@ -11,8 +11,6 @@ import java.net.*;
  */
 class ForwardToLocal implements IForwardType {
     private DNSDatagram dnsDatagram;
-    private int clientPort;
-    private InetAddress clientAddress;
 
     /**
      * 构造并发送报文
@@ -20,22 +18,26 @@ class ForwardToLocal implements IForwardType {
      */
     @Override
     public void sendPkg(DatagramPacket datagramPacket, DNSDatagram dnsDatagram) {
-        this.clientPort = datagramPacket.getPort();
-        this.clientAddress = datagramPacket.getAddress();
+        int clientPort = datagramPacket.getPort();
+        InetAddress clientAddress = datagramPacket.getAddress();
         this.dnsDatagram = dnsDatagram;
+
         changeFlag();
         changeAnswerCount();
         addResponseData();
+        DatagramPacket responsePacket = new DatagramPacket(new byte[1024], 1024);
+        responsePacket.setPort(clientPort);
+        responsePacket.setAddress(clientAddress);
+        responsePacket.setData(this.dnsDatagram.build());
 
-        try {
-            DatagramPacket responsePacket = new DatagramPacket(new byte[1024], 1024);
-            responsePacket.setPort(clientPort);
-            responsePacket.setAddress(clientAddress);
-            responsePacket.setData(this.dnsDatagram.build());
-            Listen.datagramSocket.send(responsePacket);
-            System.out.println("匹配请求的回应已发送至本机");
-        } catch (IOException e) {
-            e.printStackTrace();
+        synchronized (Listen.Lock) {
+            try {
+                Listen.localSocket.send(responsePacket);
+                System.out.println(Thread.currentThread().getName() + "匹配请求的回应已发送至本机:");
+                dnsDatagram.debugOutput();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
