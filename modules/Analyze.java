@@ -5,12 +5,16 @@ import modules.datagram.Header;
 import modules.datagram.Request;
 
 import java.net.DatagramPacket;
+import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 解析报文信息
  */
-class Analyze implements Runnable {
+class Analyze{
+    static Map<Integer, Integer> ipMap = new HashMap<>();
     private static final int NAME_FIRST_INDEX = 12;     //报文中域名所在的第一位
     private DatagramPacket receivePacket;
 
@@ -22,7 +26,7 @@ class Analyze implements Runnable {
      * 对已抓取报文并进行分析，之后进行请求回应
      * Analyze the packet, then forward/response them
      */
-    @Override
+
     public void run() {
         //解析报文，转为字符数组
         DNSDatagram dnsDatagram = Analyze.translatePkg(receivePacket.getData());
@@ -30,19 +34,31 @@ class Analyze implements Runnable {
                 Integer.toHexString(dnsDatagram.getHeader().getFlags()[0]),
                 Integer.toHexString(dnsDatagram.getHeader().getFlags()[1])
         };
-
-        //只接收A类请求和0100的情况
-        if ((Integer.toHexString(dnsDatagram.getRequest().getqType()[1]).equals("1")||Integer.toHexString(dnsDatagram.getRequest().getqType()[1]).equals("1c")) &&
-                (flags[0].equals("1") &&
-                flags[1].equals("0"))) {
-            //如果匹配DNSFile则发送给本地
-            if (DNSFile.search(dnsDatagram.getRequest().extractName()) != null) {
-                Forward f = new Forward(new ForwardToLocal());
-                f.sendPkg(receivePacket, dnsDatagram);
-            }
-            else {
-                Forward f = new Forward(new ForwardToInternet());
-                f.sendPkg(receivePacket, dnsDatagram);
+        if (isQuery(receivePacket.getData())) {
+                if (DNSFile.search(dnsDatagram.getRequest().extractName()) != null) {
+                    //匹配DNSFile,A,发送给本地
+                    if (dnsDatagram.getRequest().getqType()[1] != 0x1c) {
+                        Forward f = new Forward(new ForwardToLocal());
+                        f.sendPkg(receivePacket, dnsDatagram);
+                    }
+                    //匹配DNSFile,AAAA
+                    else {
+                        Forward f = new Forward(new ForwardToInternet());
+                        f.sendPkg(receivePacket, dnsDatagram);
+                    }
+                }
+                //不匹配DNSFile
+                else {
+                    Forward f = new Forward(new ForwardToInternet());
+                    f.sendPkg(receivePacket, dnsDatagram);
+                }
+        }
+        // response
+        else {
+            try {
+                new ForwardResponse(receivePacket);
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
             }
         }
 //        else {
@@ -84,5 +100,15 @@ class Analyze implements Runnable {
         return new DNSDatagram(header, request);
     }
 
+    static int byte2Short( byte[] buf ){
 
+        int targets = (buf[1] & 0xff) | ((buf[0] << 8) & 0xff00); // | 表示安位或
+        return targets;
+    }
+
+
+    boolean isQuery(byte[] sendData ){
+
+        return ( ( sendData[2] & 0x80 ) == 0x00 );
+    }
 }
