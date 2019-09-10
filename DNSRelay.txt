@@ -1,3 +1,4 @@
 0.0.0.0 www.abcde.com
 123.255.255.1 www.this.is.name
 1.1.1.1 www.bupt.edu.cn
+2.2.2.2 a.b.c.d

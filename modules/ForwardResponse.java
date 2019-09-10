@@ -14,14 +14,14 @@ class ForwardResponse {
             internetReceivedPacket.setPort(Analyze.ipMap.get(Analyze.byte2Short(datagramPacket.getData())));
             Analyze.ipMap.remove(Analyze.byte2Short(datagramPacket.getData()));
 
-//        synchronized (Listen.Lock) {
-            try {
-                Listen.localSocket.send(internetReceivedPacket);
-                System.out.println(Thread.currentThread().getName() + "获得来自网络的响应(报文略)");
-            } catch (IOException e) {
-                e.printStackTrace();
+            synchronized (Listen.Lock) {
+                try {
+                    Listen.localSocket.send(internetReceivedPacket);
+                    System.out.println(Thread.currentThread().getName() + "获得来自网络的响应(报文略)");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-//        }
         }
     }
 }

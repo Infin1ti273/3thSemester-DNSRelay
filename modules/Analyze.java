@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 解析报文信息
  */
-class Analyze{
+class Analyze implements Runnable {
     static Map<Integer, Integer> ipMap = new HashMap<>();
     private static final int NAME_FIRST_INDEX = 12;     //报文中域名所在的第一位
     private DatagramPacket receivePacket;
@@ -27,13 +27,10 @@ class Analyze{
      * Analyze the packet, then forward/response them
      */
 
+    @Override
     public void run() {
         //解析报文，转为字符数组
         DNSDatagram dnsDatagram = Analyze.translatePkg(receivePacket.getData());
-        String[] flags = new String[]{
-                Integer.toHexString(dnsDatagram.getHeader().getFlags()[0]),
-                Integer.toHexString(dnsDatagram.getHeader().getFlags()[1])
-        };
         if (isQuery(receivePacket.getData())) {
                 if (DNSFile.search(dnsDatagram.getRequest().extractName()) != null) {
                     //匹配DNSFile,A,发送给本地

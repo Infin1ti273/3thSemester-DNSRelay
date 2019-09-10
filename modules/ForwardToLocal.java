@@ -30,15 +30,15 @@ class ForwardToLocal implements IForwardType {
         responsePacket.setAddress(clientAddress);
         responsePacket.setData(this.dnsDatagram.build());
 
-//        synchronized (Listen.Lock) {
+        synchronized (Listen.Lock) {
             try {
                 Listen.localSocket.send(responsePacket);
                 System.out.println(Thread.currentThread().getName() + "匹配请求的回应已发送至本机:");
-                dnsDatagram.debugOutput();/*TODO debug*/
+//                dnsDatagram.debugOutput();/*TODO debug*/
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//        }
+        }
     }
 
     /**

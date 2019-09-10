@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 public class Listen {
     static DatagramSocket localSocket;
 
-//    static final Object Lock = new Object();
+    static final Object Lock = new Object();
 
     /**
      * 初始化监听配置并创建线程
@@ -22,7 +22,7 @@ public class Listen {
         localSocket = new DatagramSocket(53);
 
         System.out.println("Initiating Listening module......");
-//        ExecutorService servicePool = Executors.newFixedThreadPool(20);
+        ExecutorService servicePool = Executors.newFixedThreadPool(20);
 
         while (true) {
             DatagramPacket receivePacket = new DatagramPacket(new byte[4096], 4096);
@@ -31,9 +31,9 @@ public class Listen {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            servicePool.execute(new Analyze(receivePacket));
-            Analyze analyze = new Analyze(receivePacket);
-            analyze.run();
+            servicePool.execute(new Analyze(receivePacket));
+//            Analyze analyze = new Analyze(receivePacket);
+//            analyze.run();
         }
     }
 
