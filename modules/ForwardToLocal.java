@@ -69,7 +69,7 @@ class ForwardToLocal implements IForwardType {
      */
     private void addResponseData() {
         String[] cursor = {"c0", "0c"};     //代表域名开始的位置
-        String[] type = {"00", "01"};       //CNAME
+        String[] type = {"00", "01"};       //A
         String[] className = {"00", "01"};  //IN
         String[] timeToLive = {"00", "01", "51", "80"};     //随意设置
         String[] data = ipString2hexString(DNSFile.search(dnsDatagram.getRequest().extractName()));    //数据（ip）
