@@ -58,7 +58,7 @@ public class Listen implements Runnable {
                     System.out.println("网络/本机回复：");
                 }
                 else {
-                    //只接收A类请求和0100的情况
+                    //只接收A类请求和Flag0100的情况
                     if (Integer.toHexString(dnsDatagram.getRequest().getqType()[1]).equals("1") &&
                             flags[0].equals("1") &&
                             flags[1].equals("0")) {

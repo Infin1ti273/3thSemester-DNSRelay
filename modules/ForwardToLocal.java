@@ -11,8 +11,6 @@ import java.net.*;
  */
 class ForwardToLocal implements IForwardType {
     private DNSDatagram dnsDatagram;
-    private int clientPort;
-    private InetAddress clientAddress;
 
     /**
      * 构造并发送报文
@@ -20,8 +18,8 @@ class ForwardToLocal implements IForwardType {
      */
     @Override
     public void sendPkg(DatagramPacket datagramPacket, DNSDatagram dnsDatagram) {
-        this.clientPort = datagramPacket.getPort();
-        this.clientAddress = datagramPacket.getAddress();
+        int clientPort = datagramPacket.getPort();
+        InetAddress clientAddress = datagramPacket.getAddress();
         this.dnsDatagram = dnsDatagram;
         changeFlag();
         changeAnswerCount();
@@ -67,7 +65,7 @@ class ForwardToLocal implements IForwardType {
      */
     private void addResponseData() {
         String[] cursor = {"c0", "0c"};     //代表域名开始的位置
-        String[] type = {"00", "01"};       //CNAME
+        String[] type = {"00", "01"};       //A
         String[] className = {"00", "01"};  //IN
         String[] timeToLive = {"00", "01", "51", "80"};     //随意设置
         String[] data = ipString2hexString(DNSFile.search(dnsDatagram.getRequest().extractName()));    //数据（ip）

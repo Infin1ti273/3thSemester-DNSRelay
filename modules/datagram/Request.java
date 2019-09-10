@@ -62,7 +62,7 @@ public class Request extends DatagramBuilder {
 
         System.out.println("#Request:");
         for (byte b: this.qName) {
-            name.add(Integer.toHexString(b));
+            name.add(Integer.toHexString(b & 0xFF));
         }
         //输出域名
         for (String s: name) {
@@ -72,8 +72,8 @@ public class Request extends DatagramBuilder {
         System.out.println(extractName());
 
         //输出剩余信息（type和class）
-        System.out.println("Type: " + Integer.toHexString(qType[0]) + " " + Integer.toHexString(qType[1]));
-        System.out.println("Class: " + Integer.toHexString(qClass[0]) + " " + Integer.toHexString(qClass[1]) + "\n");
+        System.out.println("Type: " + Integer.toHexString(qType[0] & 0xFF) + " " + Integer.toHexString(qType[1] & 0xFF));
+        System.out.println("Class: " + Integer.toHexString(qClass[0] & 0xFF) + " " + Integer.toHexString(qClass[1] & 0xFF) + "\n");
     }
 
 
