@@ -12,6 +12,7 @@ class ForwardResponse {
             internetReceivedPacket.setData(datagramPacket.getData());
             internetReceivedPacket.setAddress(InetAddress.getByName("127.0.0.1"));
             internetReceivedPacket.setPort(Analyze.ipMap.get(Analyze.byte2Short(datagramPacket.getData())));
+
             Analyze.ipMap.remove(Analyze.byte2Short(datagramPacket.getData()));
 
             synchronized (Listen.Lock) {

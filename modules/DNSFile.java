@@ -36,6 +36,7 @@ public class DNSFile {
 
     /**
      * 寻找文件中是否有匹配的ip:
+     * @param request 域名
      * @return 匹配ip/null
      */
     static String search(String request){

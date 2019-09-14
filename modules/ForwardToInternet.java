@@ -21,9 +21,10 @@ class ForwardToInternet implements IForwardType {
             sendPacket.setData(dnsDatagram.build());
             synchronized (Listen.Lock) {
                 Listen.localSocket.send(sendPacket);
+                //记录
                 Analyze.ipMap.put(Analyze.byte2Short(datagramPacket.getData()),datagramPacket.getPort());
                 System.out.println(Thread.currentThread().getName() + "不匹配请求已发送至网络:");
-            dnsDatagram.debugOutput();            /*TODO debug*/
+                dnsDatagram.debugOutput();
             }
 
 

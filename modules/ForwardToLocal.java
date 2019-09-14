@@ -34,7 +34,7 @@ class ForwardToLocal implements IForwardType {
             try {
                 Listen.localSocket.send(responsePacket);
                 System.out.println(Thread.currentThread().getName() + "匹配请求的回应已发送至本机:");
-//                dnsDatagram.debugOutput();/*TODO debug*/
+                dnsDatagram.debugOutput();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -71,7 +71,7 @@ class ForwardToLocal implements IForwardType {
         String[] cursor = {"c0", "0c"};     //代表域名开始的位置
         String[] type = {"00", "01"};       //A
         String[] className = {"00", "01"};  //IN
-        String[] timeToLive = {"00", "01", "51", "80"};     //随意设置
+        String[] timeToLive = {"00", "01", "51", "80"};     //取决于服务器，此处为默认设置
         String[] data = ipString2hexString(DNSFile.search(dnsDatagram.getRequest().extractName()));    //数据（ip）
         String[] dataLength = new String[]{"00",Integer.toHexString(data.length)};      //数据长度
 

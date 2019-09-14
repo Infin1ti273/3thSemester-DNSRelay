@@ -31,7 +31,10 @@ class Analyze implements Runnable {
     public void run() {
         //解析报文，转为字符数组
         DNSDatagram dnsDatagram = Analyze.translatePkg(receivePacket.getData());
+
+        // request
         if (isQuery(receivePacket.getData())) {
+                //search name
                 if (DNSFile.search(dnsDatagram.getRequest().extractName()) != null) {
                     //匹配DNSFile,A,发送给本地
                     if (dnsDatagram.getRequest().getqType()[1] != 0x1c) {
@@ -58,13 +61,6 @@ class Analyze implements Runnable {
                 e.printStackTrace();
             }
         }
-//        else {
-//            synchronized (Listen.Lock) {
-//                System.out.println(Thread.currentThread().getName() + "收到非A类请求，不进行处理：");
-//                /*TODO*/ //debug
-//                dnsDatagram.debugOutput();
-//            }
-//        }
     }
 
 
@@ -98,14 +94,10 @@ class Analyze implements Runnable {
     }
 
     static int byte2Short( byte[] buf ){
-
-        int targets = (buf[1] & 0xff) | ((buf[0] << 8) & 0xff00); // | 表示安位或
-        return targets;
+        return (buf[1] & 0xff) | ((buf[0] << 8) & 0xff00);
     }
 
-
-    boolean isQuery(byte[] sendData ){
-
+    private boolean isQuery(byte[] sendData){
         return ( ( sendData[2] & 0x80 ) == 0x00 );
     }
 }

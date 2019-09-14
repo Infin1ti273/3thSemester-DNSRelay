@@ -1,7 +1,5 @@
 package modules;
 
-import modules.datagram.DNSDatagram;
-
 import java.io.IOException;
 import java.net.*;
 import java.util.concurrent.ExecutorService;
@@ -22,8 +20,9 @@ public class Listen {
         localSocket = new DatagramSocket(53);
 
         System.out.println("Initiating Listening module......");
-        ExecutorService servicePool = Executors.newFixedThreadPool(20);
 
+        ExecutorService threadPool = Executors.newFixedThreadPool(20);
+        //noinspection InfiniteLoopStatement
         while (true) {
             DatagramPacket receivePacket = new DatagramPacket(new byte[4096], 4096);
             try {
@@ -31,9 +30,7 @@ public class Listen {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            servicePool.execute(new Analyze(receivePacket));
-//            Analyze analyze = new Analyze(receivePacket);
-//            analyze.run();
+            threadPool.execute(new Analyze(receivePacket));
         }
     }
 
